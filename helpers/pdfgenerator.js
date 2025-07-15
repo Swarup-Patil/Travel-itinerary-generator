@@ -11,7 +11,10 @@ const client = createClient(`${process.env.PEXEL_KEY}`);
 export const createPDF = async (itineraryData, outputPath) => {
   let backgroundPhoto;
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
     const page = await browser.newPage();
     const query = itineraryData.city;
 
@@ -35,10 +38,7 @@ export const createPDF = async (itineraryData, outputPath) => {
   }
 };
 
-function generateHTML(
-  { city,itinerary },
-  backgroundPhoto
-) {
+function generateHTML({ city, itinerary }, backgroundPhoto) {
   return `
     <!DOCTYPE html>
     <html>
@@ -171,7 +171,7 @@ function generateHTML(
         ${itinerary
           .map(
             (day, index) => `
-            ${index > 0 ? '<div class="break-page"></div>' : ''}
+            ${index > 0 ? '<div class="break-page"></div>' : ""}
             <div class="day-section">
               <h3>📍 Day ${index + 1}</h3>
               <a class="route" href="${
@@ -180,7 +180,7 @@ function generateHTML(
               <div class="map">
                 <img src="${day.static_map_url}" alt="Map for Day ${
               index + 1
-              }" />
+            }" />
               </div>
 
               <h4>Activities</h4>
