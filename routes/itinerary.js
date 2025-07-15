@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { generateItinerary } from '../controllers/itinerary.js';
+import { itineraryLimiter } from '../helpers/ratelimit.js';
+
 const router = express.Router();
-const { generateItinerary } = require('../controllers/itinerary');
-const {itineraryLimiter} = require('../helpers/ratelimit')
 
 router.post('/', itineraryLimiter, generateItinerary);
 
-module.exports = router;
+export default router;
