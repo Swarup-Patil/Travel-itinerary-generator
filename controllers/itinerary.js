@@ -17,8 +17,44 @@ export const generateItinerary = async (req, res) => {
     const { city, startDate, endDate, interests, budget, pace } = req.body;
     const imageList = [];
 
-    if (!city || !startDate || !endDate || !interests || !budget || !pace) {
-      return res.status(400).json({ error: "Missing required fields" });
+    if (!city || typeof city !== "string" || !city.trim()) {
+      return res.status(400).json({ error: "Invalid or missing 'city'" });
+    }
+
+    if (
+      !startDate ||
+      isNaN(new Date(startDate)) ||
+      !endDate ||
+      isNaN(new Date(endDate))
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Invalid or missing 'startDate' or 'endDate'" });
+    }
+
+    // Calculate trip duration
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+    if (diffDays <= 0 || diffDays > 5) {
+      return res
+        .status(400)
+        .json({ error: "Trip duration must be between 1 and 5 days" });
+    }
+
+    if (!Array.isArray(interests) || interests.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "'interests' must be a non-empty array" });
+    }
+
+    if (!budget || typeof budget !== "string") {
+      return res.status(400).json({ error: "Invalid or missing 'budget'" });
+    }
+
+    if (!pace || typeof pace !== "string") {
+      return res.status(400).json({ error: "Invalid or missing 'pace'" });
     }
 
     const prompt = buildPrompt(req.body);
@@ -145,6 +181,11 @@ export const generateItinerary = async (req, res) => {
     return res.download(path.resolve(pdfPath), "itinerary.pdf");
   } catch (err) {
     console.error(err, "error found");
-    res.status(500).json({ error: "Server Error found , Please try again", errormessage: err.message });
+    res
+      .status(500)
+      .json({
+        error: "Server Error found , Please try again",
+        errormessage: err.message,
+      });
   }
 };

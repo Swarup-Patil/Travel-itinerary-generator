@@ -141,9 +141,9 @@ function generateHTML({ city, itinerary }, backgroundPhoto) {
             margin-bottom: 10px;
           }
 
-          .card img.locationimg {
-            width: 300px;
-            height: 180px;
+          .locationimg {
+            width: 35% !important;
+            height: 200px !important;
             object-fit: cover;
             margin-right: 20px;
             margin-bottom: 8px;
@@ -202,8 +202,7 @@ function generateHTML({ city, itinerary }, backgroundPhoto) {
                       </div>
                       </div>
                     </div>`
-                  )
-                  .join("")}
+                  )}
               </div>
 
               <h4>Restaurants</h4>
@@ -223,8 +222,7 @@ function generateHTML({ city, itinerary }, backgroundPhoto) {
                       </div>
                       </div>
                     </div>`
-                  )
-                  .join("")}
+                  )}
               </div>
 
               <h4>Nearby Recommendations</h4>
@@ -246,12 +244,10 @@ function generateHTML({ city, itinerary }, backgroundPhoto) {
                       </div>
                       </div>
                     </div>`
-                  )
-                  .join("")}
+                  )}
               </div>
             </div>`
-          )
-          .join("")}
+          )}
       </body>
     </html>
   `;
